@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-database.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/htmlson.js@1.0.4/src/htmlson.js"></script>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+        <link rel="stylesheet" href="https://unpkg.com/primitive-ui/dist/css/main.css" />
+        <style>
+            .w3-container{
+                padding: 0;
+            }
+            .flx{
+                display: flex;
+            }
+            .f1{
+                flex-grow: 1;
+            }
+            .f2{
+                flex-grow: 2;
+            }
+            .f3{
+                flex-grow: 3;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="w3-card w3-blue w3-input w3-margin-bottom">
+            <div class="w3-button">Data Member</div>
+        </div>
+        <div class="w3-container w3-padding flx">
+            <div id="tab" class="f1"></div>
+            <div id="disini" class=" f2"></div>
+        </div>
+        
+
+        
+        <script>
+            var firebaseConfig = {
+            apiKey: "AIzaSyAfaFiaHG11U1QCDPf-Q63LFSLm7wFr7oE",
+            authDomain: "bestdriver-40d6a.firebaseapp.com",
+            databaseURL: "https://bestdriver-40d6a.firebaseio.com",
+            projectId: "bestdriver-40d6a",
+            storageBucket: "bestdriver-40d6a.appspot.com",
+            messagingSenderId: "1013258355731",
+            appId: "1:1013258355731:web:5a926d44a48a72d68aabe6"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            var database = firebase.database();
+
+            database.ref("users").once("value").then((snapshot)=>{
+                var key  = Object.keys(snapshot.val())
+                var sub = `<div class="w3-container w3-light-grey w3-bar-block">`
+                for(var i in key){
+                    var datanya = btoa(JSON.stringify(snapshot.val()[key[i]]))
+                    sub +=`<div class=" w3-bar-item w3-button" onclick="bukaMember('${datanya}')">${key[i]}</div>`
+                }
+                    sub +=`</div>`
+                $("#tab").html(sub)
+            })
+
+
+            // proses tabel member
+            function bukaMember(data){
+               var datanya = JSON.parse(atob(data))
+               var anakan = datanya.anakan
+               var lihat = []
+               for(var a in anakan){
+                   lihat.push(anakan[a])
+               }
+
+               var kun = []
+               for(var y in lihat){
+                   var key = Object.keys(lihat[y])
+                   kun.push(key)
+               }
+               var uniq = new Set(kun)
+               var kun = [...uniq][0]
+                   kun = $.extend({},kun)
+               var kunc = []
+                   kunc.push(kun)
+
+               var tab = '<table class="w3-table-all w3-content"><tr class="w3-blue">'
+               $.each(kun,(i,t)=>{
+                   tab +=`<th>${t}</th>`
+               })
+                    tab +=`</tr>`
+               $.each(lihat,(i,t)=>{
+                 tab +=`<tr >`  
+                 tab +=`<td>${t.alamat}</td>`
+                 tab +=`<td>${t.hp}</td>`
+                 tab +=`<td>${t.key}</td>`
+                 tab +=`<td>${t.nama}</td>`
+                 tab +=`<td>${t.referral}</td>`
+                 tab +=`<td><img src="${t.urlKtp}" style="height:50px"></td>`
+                 tab +=`<td><img src="${t.urlSim}" style="height:50px"></td>`
+                 tab +=`<td><img src="${t.urlSkck}" style="height:50px"></td>`
+                 tab +=`</tr>`
+               })
+               tab+=`</table>`
+               $('#disini').html(tab)
+               
+
+               
+            }
+
+
+            
+
+
+            
+
+        </script>
+    </body>
+</html>
